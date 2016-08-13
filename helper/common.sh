@@ -20,6 +20,20 @@ function ERROR()
     echo -e "$now[ERROR][$0:$BASH_LINENO] $1"
 }
 
+function SETV
+{
+    filename=$1
+    keyname=$2
+    keyvalue=$3     # 可以为空
+    keynametxt=$(echo $keyname | sed "s/\[/\\\[/g; s/\]/\\\]/g")
+    targetLine=`grep "^${keynametxt}=" ${filename}`
+    if [ "$targetLine"  ]; then
+        sed --in-place "s%^${keynametxt}=.*%${keynametxt}=${keyvalue}%" ${filename}
+    else
+        echo "${keyname}=${keyvalue}" >>${filename}
+    fi
+}
+
 function SENDRTX()
 {
     MSG_RECVER="$1"
